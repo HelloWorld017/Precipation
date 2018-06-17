@@ -1,0 +1,31 @@
+{
+  "name": "precipation",
+  "version": "1.0.0",
+  "description": "An electron-based desktop widget",
+  "main": "app/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HelloWorld017/precipation.git"
+  },
+  "keywords": [
+    "electron",
+    "widget"
+  ],
+  "author": "Khinenw",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HelloWorld017/precipation/issues"
+  },
+  "homepage": "https://github.com/HelloWorld017/precipation#readme",
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-1": "^6.24.1"
+  },
+  "dependencies": {
+    "vue": "^2.5.16",
+    "vuex": "^3.0.1"
+  }
+}

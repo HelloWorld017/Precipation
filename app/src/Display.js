@@ -1,6 +1,7 @@
 const {BrowserWindow} = require('electron');
 const {getWindowOptions, setBottomMost} = require('./window');
 const os = require('os');
+const path = require('path');
 
 class Display {
 	constructor(display) {
@@ -12,9 +13,10 @@ class Display {
 	}
 
 	createWindow() {
+		return;
 		this.displayWindow = new BrowserWindow(getWindowOptions(this));
 		this.displayWindow.setMenu(null);
-		this.diplayWindow.loadURL(path.resolve(__dirname, '..', 'precipation.html'));
+		this.displayWindow.loadURL(path.resolve(__dirname, '..', 'precipation.html'));
 		this.displayWindow.show();
 
 		setBottomMost(this.displayWindow);

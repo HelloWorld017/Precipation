@@ -4,7 +4,8 @@
   "description": "An electron-based desktop widget",
   "main": "app/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron app/index.js"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,10 @@
     "babel-preset-stage-1": "^6.24.1"
   },
   "dependencies": {
+    "electron": "^2.0.2",
+    "electron-bottom-most": "^0.3.0",
     "vue": "^2.5.16",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "vuex-persistedstate": "^2.5.4"
   }
 }

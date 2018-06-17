@@ -11,24 +11,26 @@ const Widget = require('./Widget');
 class Precipation {
 	constructor() {
 		this.store = makeStore();
-		this.widgetBaseDir = path.resolve('./widgets');
-		this.initWidgets();
 		this.displays = screen.getAllDisplays().map(v => new Display(v));
 		this.displays.forEach(v => v.createWindow());
+		this.widgetBaseDir = path.resolve('./precipation/widgets');
+		this.initWidgets();
+
+		app.on('window-all-closed', () => app.quit());
 	}
 
 	initWidgets() {
-		const widgets = store.state.widgets;
-		for(widget of widgets) {
+		const widgets = this.store.state.widgets;
+		for(let widgetConfig of widgets) {
 			try {
-				const widgetDir = this.getWidgetDirectory(widget.id);
-				const widgetDescription = fs.readFileSync(JSON.parse(path.resolve(widgetDir, 'precipation.json')));
+				const widgetDir = this.getWidgetDirectory(widgetConfig.id);
+				const widgetDescription = JSON.parse(fs.readFileSync(path.resolve(widgetDir, 'precipation.json')));
 
-				const widget = new Widget(this, widgetDescription, widget);
+				const widget = new Widget(this, widgetDescription, widgetConfig);
 				widget.createWindow();
 
 			} catch(e) {
-				this.log(widget.id, 'error', e.stack);
+				this.log(widgetConfig.id, 'error', e.stack);
 			}
 		}
 	}

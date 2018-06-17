@@ -1,4 +1,6 @@
+const {BrowserWindow} = require('electron');
 const {getWindowOptions, setBottomMost} = require('./window');
+const path = require('path');
 
 class Widget {
 	constructor(precipation, description, config) {

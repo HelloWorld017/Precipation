@@ -1,5 +1,6 @@
-let SetBottomMost = () => {};
+const os = require('os');
 
+let SetBottomMost = () => {};
 if(os.platform() === 'win32') {
 	SetBottomMost = require('electron-bottom-most').SetBottomMost;
 }

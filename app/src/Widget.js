@@ -4,15 +4,19 @@ const path = require('path');
 
 class Widget {
 	constructor(precipation, description, config) {
+		this.precipation = precipation;
+		this.directory = precipation.getWidgetDirectory(config.typeId);
 		this.config = config;
 		this.description = description;
-		this.id = this.description.id;
+		this.typeId = description.id;
+		this.id = config.id;
 		this.x = config.x || 0;
 		this.y = config.y || 0;
 		this.width = config.width !== undefined ? config.width : description.desired_size.width;
 		this.height = config.height !== undefined ? config.height : description.desired_size.height;
-		this.precipation = precipation;
-		this.directory = precipation.getWidgetDirectory(config.id);
+
+		this.processSize('width');
+		this.processSize('height');
 
 		if(description.script) {
 			const ScriptClass = require(path.resolve(this.directory, description.script));
@@ -24,7 +28,7 @@ class Widget {
 
 	createWindow() {
 		if(!this.description.individual) {
-			const display = this.precipation.displays.find(v => v.isWidgetInDisplay(this));
+			const display = this.getDisplay();
 			display.hostWidget(this);
 
 			this.hostingDisplay = display;
@@ -37,10 +41,50 @@ class Widget {
 		this.window = new BrowserWindow(options);
 		if(this.script && this.script.onLoaded) this.script.onLoaded(this.window);
 
+		this.window.webContents.on('crashed', (event, errorCode, description) => {
+			this.precipation.log(this.typeId, 'error', description);
+		});
+
+		this.window.webContents.on('did-finish-load', (err) => {
+			this.precipation.log(this.typeId, 'info', "Widget Layer Page loaded successfully!");
+		});
+
 		this.window.setMenu(null);
-		this.window.loadURL(path.resolve(this.directory, this.description.main));
 		this.window.show();
+		this.window.loadURL(this.resolveUrl(this.description.main));
+		this.window.webContents.toggleDevTools();
 		setBottomMost(this.window);
+
+		this.precipation.log(this.typeId, 'info', "Created Individual Widget Layer.");
+	}
+
+	resolveUrl(url) {
+		if(this.description.use_file_protocol) {
+			return path.resolve(this.directory, url);
+		}
+
+		return `precipation://${this.typeId}/${url}`;
+	}
+
+	getDisplay() {
+		return this.precipation.displays.find(v => v.isWidgetInDisplay(this));
+	}
+
+	processSize(name) {
+		if(typeof this[name] === 'string') {
+			const match = this[name].match(/^((?:\d|\.)+)(px|%)$/);
+
+			if(!match) {
+				this[name] = 300;
+				this.precipation.log(this.typeId, 'error', `Invalid property: ${name}`);
+			} else {
+				if(match[2] === '%') {
+					this[name] = Math.round(this.getDisplay()[name] * parseFloat(match[1]) / 100);
+				} else {
+					this[name] = parseInt(match[1]);
+				}
+			}
+		}
 	}
 
 	destroy() {
@@ -69,7 +113,7 @@ class Widget {
 
 	saveConfig() {
 		let config = {
-			id: this.id,
+			typeId: this.typeId,
 			x: this.x,
 			y: this.y,
 			width: this.width,

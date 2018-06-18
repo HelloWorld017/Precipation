@@ -19,8 +19,6 @@ module.exports.getWindowOptions = (object, title='Precipation Layer') => {
 		title: title,
 		type: os.platform() === 'win32' ? null : 'desktop',
 		webPreferences: {
-			webSecurity: false,
-			allowRunningInsecureContent: true,
 			experimentalFeatures: true,
 			experimentalCanvasFeatures: true
 		}

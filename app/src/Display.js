@@ -20,10 +20,19 @@ class Display {
 		this.displayWindow.show();
 
 		setBottomMost(this.displayWindow);
+
+		console.log("Created Display Layer.");
 	}
 
 	hostWidget(widget) {
-		//TODO implement multiwidgetview
+		const viewSetting = {
+			x: widget.x - this.x,
+			y: widget.y - this.y,
+			width: widget.width,
+			height: widget.height
+		};
+
+
 	}
 
 	removeWidget(widget) {

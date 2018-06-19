@@ -52,8 +52,11 @@ class Widget {
 		this.window.setMenu(null);
 		this.window.show();
 		this.window.loadURL(this.resolveUrl(this.description.main));
-		this.window.webContents.toggleDevTools();
 		setBottomMost(this.window);
+
+		if(this.description.click_through) {
+			this.window.setIgnoreMouseEvents(true);
+		}
 
 		this.precipation.log(this.typeId, 'info', "Created Individual Widget Layer.");
 	}
